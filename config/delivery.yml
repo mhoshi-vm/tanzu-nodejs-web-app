@@ -1,0 +1,33 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: tanzu-nodejs-web-app
+  labels:
+    app.kubernetes.io/part-of: tanzu-nodejs-web-app
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/component: run
+    carto.run/workload-name: tanzu-nodejs-web-app
+spec:
+  template:
+    metadata:
+      annotations:
+        apps.tanzu.vmware.com/live-update: "true"
+        conventions.apps.tanzu.vmware.com/applied-conventions: developer-conventions/add-source-image-label
+        developer.apps.tanzu.vmware.com/image-source-digest: master/ec2886bf03ae4cd9e751e983cf1281ea544a24c2
+        developer.conventions/target-containers: workload
+      labels:
+        app.kubernetes.io/component: run
+        app.kubernetes.io/part-of: tanzu-nodejs-web-app
+        apps.tanzu.vmware.com/workload-type: web
+        carto.run/workload-name: tanzu-nodejs-web-app
+    spec:
+      containers:
+      - env:
+        - name: JAVA_TOOL_OPTIONS
+        image: harbor.lespaulstudioplus.info/tap/supply-chain/tanzu-nodejs-web-app-default@sha256:175d4a77490b48fa7edc407a3c0ea2ead63688c25cbe7f56488ef4a9e6cfa9c4
+        name: workload
+        resources: {}
+        securityContext:
+          runAsUser: 1000
+      serviceAccountName: default
+
